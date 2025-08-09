@@ -1,0 +1,68 @@
+name: PHP Info Page
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *" # 每 5 分鐘執行一次（UTC）
+
+jobs:
+  phpinfo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔄 Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 📦 Download run count artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: run-count
+        continue-on-error: true # 第一次執行時 artifact 不存在
+
+      - name: 🧮 Check and update run count
+        id: runcheck
+        run: |
+          COUNT_FILE=run-count.txt
+          if [ -f "$COUNT_FILE" ]; then
+            COUNT=$(cat "$COUNT_FILE")
+          else
+            COUNT=0
+          fi
+
+          echo "目前執行次數：$COUNT"
+          if [ "$COUNT" -ge 2 ]; then
+            echo "已執行兩次，跳過流程。"
+            exit 0
+          fi
+
+          COUNT=$((COUNT + 1))
+          echo "$COUNT" > "$COUNT_FILE"
+          echo "run_count=$COUNT" >> $GITHUB_OUTPUT
+
+      - name: 🧰 Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+
+      - name: 📄 Create phpinfo page
+        run: |
+          mkdir -p public
+          echo "<?php phpinfo(); ?>" > public/index.php
+
+      - name: 🚀 Start PHP built-in server
+        run: |
+          php -S localhost:8000 -t public &
+          sleep 2
+
+      - name: 🔍 Test phpinfo page
+        run: |
+          curl -s http://localhost:8000 | grep -i "php version"
+
+      - name: 📤 Upload updated run count
+        if: steps.runcheck.outputs.run_count != '2'
+        uses: actions/upload-artifact@v3
+        with:
+          name: run-count
+          path: run-count.txt

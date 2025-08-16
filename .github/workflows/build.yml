@@ -1,10 +1,11 @@
 name: Build Reusable
 on:
-  workflow_call:
-    inputs:
-      version:
-        required: true
-        type: string #數字、布林、字串
+  workflow_call:        # 接收其他的 actions 呼叫
+    inputs:             # 保留字，用來定義參數的地方
+      version:          # 外部接受的參數名稱
+        required: true  # 參數的必要性
+        type: string    # 支援int、boolean、string
+        default:"3.10"  # 預設值
 jobs:
   build:
   runs-on: ubuntu-latest

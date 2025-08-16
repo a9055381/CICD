@@ -1,0 +1,9 @@
+name: Deploy App
+on:
+  workflow_dispatch:
+
+jobs:
+  call-build:
+    uses: a9055381/CICD/.github/workflows/build.yml@main
+    with:
+      version: "3.10"

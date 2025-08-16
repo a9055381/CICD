@@ -4,7 +4,7 @@ on:
     inputs:
       version:
         required: true
-        type: string
+        type: string #數字、布林、字串
 jobs:
   build:
   runs-on: ubuntu-latest

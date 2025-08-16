@@ -5,7 +5,7 @@ on:
       version:          # 外部接受的參數名稱
         required: true  # 參數的必要性
         type: string    # 支援int、boolean、string
-        default:"3.10"  # 預設值
+        #default:"3.10"  # 預設值
 jobs:                   # 保留字，不能改名
   build:
   runs-on: ubuntu-latest

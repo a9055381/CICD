@@ -1,12 +1,12 @@
 name: Build Reusable
 on:
-  workflow_call:        # 接收其他的 actions 呼叫
-    inputs:             # 保留字，用來定義參數的地方
+  workflow_call:        # 保留字，不能改名，接收其他的 actions 呼叫
+    inputs:             # 保留字，不能改名，用來定義參數的地方
       version:          # 外部接受的參數名稱
         required: true  # 參數的必要性
         type: string    # 支援int、boolean、string
         default:"3.10"  # 預設值
-jobs:
+jobs:                   # 保留字，不能改名
   build:
   runs-on: ubuntu-latest
   steps:
